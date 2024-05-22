@@ -93,7 +93,7 @@ function send_email(event) {
       });
 }
 
-function reply_email(id){
+function reply_email(id) {
     compose_email();
 
     // Get the email details
@@ -103,12 +103,49 @@ function reply_email(id){
             // Set the recipient
             document.querySelector('#compose-recipients').value = email.sender;
             // Set the subject
-            document.querySelector('#compose-subject').value = email.subject.startsWith('RE: ') ? email.subject : `RE: ${email.subject}`;
-            // Set the body
-            document.querySelector('#compose-body').value = `On ${email.timestamp}, ${email.sender} wrote:\n${email.body}`;
+            document.querySelector('#compose-subject').value = 
+                email.subject.startsWith('RE: ') ? email.subject : `RE: ${email.subject}`;
+            // Set the body with proper line breaks
+            document.querySelector('#compose-body').value = 
+                `\n----------------------------------------\nOn ${email.timestamp}, ${email.sender} wrote:\n${email.body}\n----------------------------------------`;
         })
         .catch(error => {
             console.error('Error:', error);
             alert('Failed to load email for reply');
+        });
+}
+
+
+function show_mail(id, mailbox) {
+    // Fetch the email details
+    fetch(`/emails/${id}`)
+        .then(response => response.json())
+        .then(email => {
+            // Clear the emails view and display the email details
+            document.querySelector("#emails-view").innerHTML = `
+                <div>
+                    <h3>${email.subject}</h3>
+                    <p><strong>From:</strong> ${email.sender}</p>
+                    <p><strong>To:</strong> ${email.recipients.join(', ')}</p>
+                    <p><strong>Timestamp:</strong> ${email.timestamp}</p>
+                    <button class="btn btn-sm btn-outline-primary" onclick="reply_email(${email.id})">Reply</button>
+                    <hr>
+                    <p>${email.body}</p>
+                </div>
+            `;
+
+            // Mark the email as read if it’s in the inbox
+            if (mailbox === 'inbox' && !email.read) {
+                fetch(`/emails/${id}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({
+                        read: true
+                    })
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.querySelector("#emails-view").innerHTML += `<p>Error loading email: ${error.message}</p>`;
         });
 }

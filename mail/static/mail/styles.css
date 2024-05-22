@@ -1,3 +1,20 @@
 textarea {
     min-height: 400px;
 }
+
+.quoted-message {
+    border-left: 2px solid #ccc;
+    padding-left: 10px;
+    margin: 10px 0;
+    background-color: #f9f9f9;
+}
+
+.quoted-message blockquote {
+    margin: 0;
+    padding-left: 10px;
+    border-left: 2px solid #ddd;
+}
+
+#compose-body {
+    min-height: 200px;
+}   
