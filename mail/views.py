@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.shortcuts import HttpResponse, HttpResponseRedirect, render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
-
+from django.db.models import Q
 from .models import User, Email
 
 
@@ -177,3 +177,13 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "mail/register.html")
+
+def search_emails(request, query):
+    if request.method == "GET":
+        emails = Email.objects.filter(
+            Q(sender__email__icontains=query) | 
+            Q(recipients__email__icontains=query) | 
+            Q(subject__icontains=query) | 
+            Q(body__icontains=query)
+        ).distinct()
+        return JsonResponse([email.serialize() for email in emails], safe=False)

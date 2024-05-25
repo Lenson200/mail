@@ -1,3 +1,37 @@
+.circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #007bff;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    font-size: 1.2em;
+}
+
+.card.read {
+    background-color: lightgray;
+}
+
+.card-body {
+    cursor: pointer;
+}
+
+.card-body .reply-btn,
+.card-body .archive-btn {
+    cursor: pointer;
+}
+
+.card-body .text-muted {
+    font-size: 0.9em;
+}
+
+.card-text {
+    margin-top: 10px;
+}
+
 textarea {
     min-height: 400px;
 }
@@ -17,4 +51,4 @@ textarea {
 
 #compose-body {
     min-height: 200px;
-}   
+}
